@@ -1,0 +1,25 @@
+data_paths:
+  listings: "data/listings.csv"
+  reviews: "data/reviews.csv"
+
+database:
+  schema: "public"
+
+tables:
+  dim_date: "dim_date"
+  dim_neighborhood: "dim_neighborhood"
+  dim_host: "dim_host"
+  dim_listing: "dim_listing"
+  fact_reviews: "fact_reviews"
+
+output:
+  data_quality_report: "output/data_quality_report.json"
+  log_file: "logs/pipeline_execution.log"
+
+validation:
+  min_price: 1
+  max_availability: 365
+  min_latitude: -90
+  max_latitude: 90
+  min_longitude: -180
+  max_longitude: 180

@@ -343,3 +343,151 @@ We will assess your submission based on:
 ---
 
 **We're excited to see your solution! Show us how you approach real-world data engineering challenges. 🚀**
+
+
+
+```md
+# Airbnb Data Engineering Test
+
+## Tech stack
+
+- Python (Pandas)
+- Postgres
+- pytest
+
+---
+
+## 1. Setup
+
+### 1.1 Requirements
+
+- Python 3.10+ (tested on 3.11)
+- Postgres installed and running locally
+- `psql` CLI or pgAdmin
+
+### 1.2 Clone and create virtualenv
+
+```bash
+git clone <your-repo-url>
+cd data-engineer-test-01
+
+python -m venv venv
+venv\Scripts\activate  # on Windows
+# source venv/bin/activate  # on Mac/Linux
+
+pip install -r requirements.txt
+```
+
+### Create database and schema
+
+Create the database in Postgres (via psql or pgAdmin):
+```bash
+CREATE DATABASE airbnb_dw;
+```
+
+Then apply the schema:
+```bash
+psql -d airbnb_dw -f sql/schema.sql
+```
+
+### 1.4 Configure environment
+
+Copy .env.example to .env and fill in your Postgres credentials:
+```bash
+DB_NAME=airbnb_dw
+DB_USER=postgres
+DB_PASSWORD=your_password
+DB_HOST=localhost
+DB_PORT=5432
+```
+
+Check src/config/config.yaml for data paths and table names.
+
+---
+
+## 2. Run the pipeline
+
+```bash
+python -m src.pipeline.orchestrator
+```
+
+This will:
+
+- Extract data from data/listings.csv and data/reviews.csv.
+- Run data quality checks and write output/data_quality_report.json.
+- Transform into star schema tables.
+- Load into Postgres (dim_* and fact_reviews).
+- Log progress to logs/pipeline_execution.log.
+
+You can then explore the tables in pgAdmin.
+
+---
+
+## 3. Run tests
+
+```bash
+pytest
+```
+
+Basic tests cover:
+- Extraction (dataframes not empty, required columns).
+- Validation (no null IDs, no orphan reviews).
+- Transform (dims and fact tables are built correctly).
+
+---
+
+### 4. Run analytics queries
+
+The three business queries are under sql/queries:
+
+- `01_pricing_intelligence.sql`
+- `02_host_performance.sql`
+- `03_market_opportunities.sql`
+
+You can run them in pgAdmin or via psql, for example:
+```bash
+psql -d airbnb_dw -f sql/queries/01_pricing_intelligence.sql
+```
+
+Each query returns a result set designed for analysis or reporting (see `SOLUTION.md` for details).
+
+---
+
+## 5. Project structure
+
+```bash
+data-engineer-test-01/
+  data/                     # raw CSVs
+  sql/
+    schema.sql              # DDL for warehouse tables
+    queries/
+      01_pricing_intelligence.sql
+      02_host_performance.sql
+      03_market_opportunities.sql
+  src/
+    pipeline/
+      extract.py
+      validate.py
+      transform.py
+      load.py
+      orchestrator.py
+    utils/
+      db_connector.py
+      logger.py
+    config/
+      config.yaml
+  tests/
+      test_extract.py
+      test_validate.py
+      test_transform.py
+  output/
+      data_quality_report.json
+  logs/
+      pipeline_execution.log
+  SOLUTION.md
+  README.md
+  requirements.txt
+  .env.example
+```
+
+---
