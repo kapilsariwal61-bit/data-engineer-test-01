@@ -345,8 +345,6 @@ We will assess your submission based on:
 **We're excited to see your solution! Show us how you approach real-world data engineering challenges. 🚀**
 
 
-
-```md
 # Airbnb Data Engineering Test
 
 ## Tech stack
